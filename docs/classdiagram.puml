@@ -1,0 +1,337 @@
+@startuml
+
+namespace bubblematrix.js {
+	class BubbleMatrix {
+		-_container: HTMLDivElement
+		-_options: BubbleMatrixOptions
+		-_dataset: Object[]
+		+{readonly} fieldNames: FieldNames
+		+partitions: Partitions
+		+chartData: ChartData
+		+measures: Measures
+		+scales: Scales
+		+renderer: Renderer
+		+BubbleMatrix(container: HTMLDivElement)
+		+{chainable} size([width: Number, height: Number]): BubbleMatrix | Size
+		+{chainable} margin(margin: {left, top, right, bottom: float}): BubbleMatrix | Margin
+		+{chainable} options(options: BubbleMatrixOptions): BubbleMatrix | BubbleMatrixOptions
+		+{chainable} columns(columns: {column, row, value: String}): BubbleMatrix | Columns
+		+{chainable} font(font: {family: String, size: String}): BubbleMatrix | Font
+		+{chainable} data(data: Object[]): BubbleMatrix | Font
+		+{chainable} events(events: {onclick, onhover, oncancel}): BubbleMatrix | Event
+		+{chainable} render(): BubbleMatrix
+		-_getMeasureSvg(): SVGElement
+	}
+
+	BubbleMatrix --> BubbleMatrixOptions : _options
+	class BubbleMatrixOptions {
+		+numberIsPercentage: bool
+		+preserveRowOrder: bool
+		+preserveColumnOrder: bool
+		+showSlider: bool
+		+sliderCaption: String
+		+highlightScope: String
+		+numberOfTopBotton: int
+		+showTooltip: bool
+		+showAnnotation: bool
+	}
+}
+
+bubblematrix.js.BubbleMatrix --> chartdata.js.ChartData : chartData
+bubblematrix.js.BubbleMatrix --> measures.js.Measures : measures
+bubblematrix.js.BubbleMatrix --> renderer.js.Renderer : renderer
+bubblematrix.js.BubbleMatrix -> Partitions : partitions
+bubblematrix.js.BubbleMatrix -> Scales : scales
+bubblematrix.js.BubbleMatrix -> Slider
+namespace chartdata.js {
+	class ChartData {
+		-_dataset: Object[]
+		-_fieldNames: FieldNames
+		+numberIsPercentage: bool
+		+preserveColumnOrder: bool
+		+preserveRowOrder: bool
+		+columns: Column[]
+		+rows: Row[]
+		+level: float
+		+defaultLevel: float
+		+average: float
+		+min: float
+		+max: float
+		+numOfTopBottom: int
+		+ChartData(dataset: Object[], fieldNames: FieldNames)
+		+resetColumns(exception: Column)
+		+resetRows(exception: Row)
+		+process()
+	}
+
+	ChartData "1" *-- "*" Column : columns
+	ChartData "1" *-- "*" Row : rows
+	ChartData --> FieldNames : fieldNames
+	Row "1" *-- "*" Cell : cells
+	class Column {
+		+name: String
+		+position: int
+		+order: SortOrder
+		+Column(name: String)
+	}
+
+	class Row {
+		+name: String
+		+position: int
+		+order: SortOrder
+		+cells: Cell[]
+		+Row(name: String, cells: Cell[])
+		+markBounds()
+	}
+
+	class Cell {
+		+row: String
+		+column: String
+		+value: float
+		+flag: CellFlag
+		+Cell(row: String, column: String, value: float)
+	}
+
+	class FieldNames {
+		+column: String
+		+row: String
+		+value: String
+		+FieldNames(column: String, row: String, value: String)
+	}
+
+	namespace enums {
+		class SortOrder <<enum>> {
+			none = 0
+			ascending = 1
+			descending = 2
+		}
+
+		class CellFlag <<enum>> {
+			unspecified = 0
+			min = 1
+			max = 2
+			rowMin = 4
+			rowMax = 8
+			bottomGroup = 16
+			topGroup = 32
+		}
+	}
+}
+
+namespace measures.js {
+	class Measures {
+		-_svg: SVGElement
+		-_minRadius: int = 25
+		+font: Font
+		+padding: int = 10
+		+margin: {left: int, right: int, top: int, bottom: int}
+		+width: int
+		+height: int
+		+sliderHeight: int = 20
+		+columnHeight: float
+		+rowWidth: float
+		+bubbleRadius: float
+		+bubbleDiameter: float
+		+Measures(svg: SVGElement)
+		+initialize(chartData: ChartData, showSlider: bool)
+		+getBBox(str: String, angle: float, font: Font): BBox
+		+calculateStringWidth(str: String, angle: float, font: Font): float
+		+trim(s: String): String
+		-_calculateLabels(chartData: ChartData)
+		-_calculateBubbleRadius(chartData: ChartData, showSlider: bool)
+	}
+	
+	Measures --> Font : font
+	class Font {
+		+Font(family: String, size: String, style: String, weight: String)
+		+{chainable} family(family: String): Font | String
+		+{chainable} size(size: String): Font | String
+		+{chainable} style(style: String): Font | String
+		+{chainable} weight(weight: String): Font | String
+		+applyTo(elem: Object)
+		+clone(): Font
+	}
+}
+
+class Scales {
+	+x: Function(i: int): float
+	+y: Function(i: int): float
+	+r: Function(v: float): float
+	+{readonly} maxX: float
+	+{readonly} maxY: float
+	+Scales()
+	+initialize(chart: BubbleMatrix);
+}
+
+class Partitions {
+	-_chart: BubbleMatrix
+	+chartArea: HTMLDivElement
+	+mainBlock: HTMLDivElement
+	+slider: HTMLDivElement
+	+columnBlock: HTMLDivElement
+	+placeHolder: HTMLDivElement
+	+columns: HTMLDivElement
+	+matrixBlock: HTMLDivElement
+	+rows: HTMLDivElement
+	+matrix: HTMLDivElement
+	+Partitions(chart: BubbleMatrix)
+	+initialize()
+	+adjustScrollableBlocks()
+	+changeFont(font: Font)
+	-_adjustSize()
+	-_createDiv(): HTMLDivElement
+	-_initStyles()
+	-_initLayout()
+}
+
+class Slider {
+	-_chart: BubbleMatrix
+	-_caption: String
+	-_g: SVGGElement
+	-_label: SVGTextElement
+	-_above: SVGGElement
+	-_below: SVGGElement
+	-_width: float
+	-_min: float
+	-_max: float
+	-_defaultValue: float
+	+level: float
+	+{readonly} defaultLevel: float
+	+{readonly} isPercent: bool
+	+{readonly} height: int
+	+{readonly} rowRenderer: RowRenderer
+	+Slider(chart: BubbleMatrix, caption: String)
+	+render()
+	-_initialize()
+	-_renderLabel()
+	-_renderColorRects()
+	-_renderSlider()
+	-_change()
+	-_getSafeBound(): {a: int, b: int}
+	-_roundUp(n: float, precision: int): int
+	-_roundDown(n: float, precision: int): int
+	-_updateLevel(value: float)	
+}
+
+namespace renderer.js {
+	class Renderer {
+		-_uuid: String
+		+chart: BubbleMatrix
+		+colors: {row, above, below, label: String}
+		+matrix: {svg: SVGElement, g, og, ig: SVGGElement}
+		+columns: ColumnRenderer
+		+rows: rowRenderer	
+		+Renderer(chart: BubbleMatrix)
+		+render()
+		+uid(id: String): String
+		-_createSvg(container: any, width: float, height: float): SVGElement
+		-_transform(x: float, y: float): String
+		-_initMatrix()
+		-_renderGradients()
+	}
+
+	Renderer ---> ColumnRenderer : columns
+	Renderer ---> RowRenderer : rows
+	PartRenderer <|-- ColumnRenderer
+	PartRenderer <|-- RowRenderer
+	class PartRenderer <<abstract>> {
+		-_mainRenderer: Renderer
+		+duration: 500
+		+{readonly} chart: BubbleMatrix
+		+{readonly} matrix: {svg: SVGElement, g, og, ig: SVGGElement}
+		+{readonly} colors: {row, above, below, label: String}
+		+{readonly} rows: RowRenderer
+		+{readonly} columns: ColumnRenderer
+		+PartRenderer(mainRenderer: Renderer)
+		+uid(id: String): String
+		+url(id: String): String
+	}
+
+	class ColumnRenderer {
+		-_arrow: SVGPathElement
+		+text: SVGTextElement
+		+labels: SVGGElement[]
+		+axis: SVGGElement[]
+		+ColumnRenderer(mainRenderer: Renderer)
+		+render()
+		-_renderGroups(g: SVGGElement, transform: String, textAnchor: String, draw: Function)
+		-_trim(d: Column)
+		-_click(e: PointerEvent, d: Column)
+		-_sort(d: Column)
+	}
+
+	class RowRenderer {
+		-_toolip: InfoBox
+		-_annotation: Annotation
+		-_labelRects: SVGRectElement[]
+		-_bubbleRects: SVGRectElement[]		
+		-_focused: Cell
+		+{readonly} bubbles: SVGCircleElement[]
+		+labels: SVGGElement[]
+		+axis: SVGGElement[]
+		+highlight: Highlight
+		+showTooltip: bool
+		+showAnnotation: bool
+		..Events..
+		+onHover(e: PointerEvent, d: Column)
+		+onCancel(e: PointerEvent, d: Column)
+		--
+		+RowRenderer(mainRenderer: Renderer)
+		+render()
+		+relocateAnnocation(delay: bool)
+		+highlightBubbles(update: bool)
+		-_renderGroups(g: SVGGElement, draw: Function)
+		-_renderRect(g: SVGGElement, x: float, width: float): SVGRectElement
+		-_click(e: PointerEvent, d: Column)
+		-_sort(d: Column)
+		-_initInfoLayer()
+		-_showAnnotation(e: PointerEvent, d: Cell)
+		-_getTooltipContent(d: Cell)
+		-_calcTooltipPosition(c: SVGPoint, box: BBox)
+		-_formatValue(v: float): String
+		-_handleClick(e: PointerEvent, d: Column)
+		-_handlePointerEnter(e: PointerEvent, d: Column)
+		-_handlePointerMove(e: PointerEvent)
+		-_handlePointerLeave(e: PointerEvent, d: Column)
+	}
+
+	RowRenderer -> Highlight : highlight
+	class Highlight <<enum>> {
+		+matrix = 0
+		+byRow = 1
+		+top = 2
+		+bottom = 3
+	}
+}
+
+renderer.js.RowRenderer --> InfoBox : _tooltip
+renderer.js.RowRenderer --> Annotation : _annotation
+class InfoBox {
+	-_svg: SVGElement
+	-_font: font
+	-_charBox: BBox	
+	+left: float
+	+top: float
+	+{readonly} box: SVGGElemnent
+	+{readony} offset: int = 10
+	..Delegates..
+	+getBBox(s: String): BBox
+	+calcTextWidth(s: String): float
+	+calcPosition(c: SVGPoint, b: BBox): {left: float, top: float}
+	--
+	+Tooltip(svg: SVGElement, font: Font, fill: String, opacity: float, stroke: String)
+	+{virtual} show(e: PointerEvent, content: String[], x: float, y: float)
+	+{virtual} move(e: PointerEvent, x: float, y: float)
+	+hide()
+	-_initBox(fill: String, opacity: float: stroke: String)
+	-_calcWidth(strs: String[])
+	-_convertCoordinate(e: PointerEvent, g: SVGGElement)
+}
+
+InfoBox <|- Annotation
+class Annotation {
+	-_pointer: SVGPathElement
+	-_removePointer()
+}
+
+@enduml
