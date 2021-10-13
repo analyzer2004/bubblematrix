@@ -1,0 +1,37 @@
+<html>
+
+<head>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+</head>
+
+<body>
+    <script type="module">
+        import BubbleMatrix from "../src/bubblematrix.js";
+        
+        d3.csv("./clothingsales.csv", d3.autoType)
+            .then(data => {
+                const chart = new BubbleMatrix(document.querySelector("#root"))
+                    .size([1000, 1000])
+                    .options({
+                        numberIsPercentage: false,
+                        showSlider: true,                        
+                        highlightScope: "matrix"                        
+                    })
+                    .font({
+                        family: "Sans-serif",
+                        size: 11
+                    })                    
+                    .columns({ row: "Subcategory", column: "Sales Territory Region", value: "Sales Amount" })
+                    .data(data)
+                    .events({
+                        onhover: d => console.log(d)
+                    })
+                    .render();
+            });
+    </script>
+    <div id="root">
+
+    </div>
+</body>
+
+</html>

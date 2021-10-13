@@ -1,10 +1,12 @@
 // https://github.com/analyzer2004/bubblematrix
 // Copyright 2021 Eric Lo 
+
 import Partitions from "./partitions.js";
 import { ChartData, FieldNames } from "./chartdata.js";
 import { Measures } from "./measures.js";
 import Scales from "./scales.js";
-import { Renderer, Highlight } from "./renderer.js";
+import Renderer from "./renderers/renderer.js";
+import { Highlight } from "./renderers/rowrenderer.js";
 import Slider from "./slider.js";
 
 export default class BubbleMatrix {
