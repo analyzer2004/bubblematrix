@@ -1,0 +1,904 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.3.0">
+  <help_text/>
+  <zoom_level>6</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1116</x>
+      <y>216</y>
+      <w>348</w>
+      <h>204</h>
+    </coordinates>
+    <panel_attributes>BubbleMatrix
+--
+-_container: HTMLDivElement
+-_options: BubbleMatrixOptions
+-_dataset: Object[0..*]
++{readonly} fieldNames: FieldNames
++partitions: Partitions
++chartData: ChartData
++measures: Measures
++scales: Scales
++renderer: Renderer
+--
++BubbleMatrix(container: HTMLDivElement)
++{chainable} size([width: Number, height: Number]): BubbleMatrix | Size
++{chainable} margin(margin: {left, top, right, bottom: float}): BubbleMatrix | Margin
++{chainable} options(options: BubbleMatrixOptions): BubbleMatrix | BubbleMatrixOptions
++{chainable} columns(columns: {column, row, value: String}): BubbleMatrix | Columns
++{chainable} font(font: {family: String, size: String}): BubbleMatrix | Font
++{chainable} data(data: Object[]): BubbleMatrix | Font
++{chainable} events(events: {onclick, onhover, oncancel}): BubbleMatrix | Event
++{chainable} render(): BubbleMatrix
+-_getMeasureSvg(): SVGElement
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1320</x>
+      <y>468</y>
+      <w>144</w>
+      <h>108</h>
+    </coordinates>
+    <panel_attributes>BubbleMatrixOptions
+--
++numberIsPercentage: bool
++preserveRowOrder: bool
++preserveColumnOrder: bool
++showSlider: bool
++sliderCaption: String
++highlightScope: String
++numberOfTopBotton: int
++showTooltip: bool
++showAnnotation: bool
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>1092</x>
+      <y>180</y>
+      <w>390</w>
+      <h>414</h>
+    </coordinates>
+    <panel_attributes>bubblematrix.js
+--
+fg=#af7aa1
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1578</x>
+      <y>216</y>
+      <w>264</w>
+      <h>186</h>
+    </coordinates>
+    <panel_attributes>ChartData
+--
+-_dataset: Object[0..*]
+-_fieldNames: FieldNames
++numberIsPercentage: bool
++preserveColumnOrder: bool
++preserveRowOrder: bool
++columns: Column[0..*]
++rows: Row[0..*]
++level: float
++defaultLevel: float
++average: float
++min: float
++max: float
++numOfTopBottom: int
+--
++ChartData(dataset: Object[], fieldNames: FieldNames)
++resetColumns(exception: Column)
++resetRows(exception: Row)
++process()
+
+group=4</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1914</x>
+      <y>216</y>
+      <w>102</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>Column
+--
++name: String
++position: int
++order: SortOrder
+--
++Column(name: String)
+group=4</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1914</x>
+      <y>306</y>
+      <w>132</w>
+      <h>78</h>
+    </coordinates>
+    <panel_attributes>Row
+--
++name: String
++position: int
++order: SortOrder
++cells: Cell[0..*]
+--
++Row(name: String, cells: Cell[])
++markBounds()
+
+group=4</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1884</x>
+      <y>444</y>
+      <w>180</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>Cell
+--
++row: String
++column: String
++value: float
++flag: CellFlag
+--
++Cell(row: String, column: String, value: float)
+group=4</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1608</x>
+      <y>444</y>
+      <w>216</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>FieldName
+--
++column: String
++row: String
++value: String
+--
++FieldNames(column: String, row: String, value: String)
+group=4</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2112</x>
+      <y>252</y>
+      <w>84</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enum&gt;&gt;
+SortOrder
+--
+none = 0
+ascending = 1
+descending = 2
+
+group=4</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2112</x>
+      <y>420</y>
+      <w>84</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enum&gt;&gt;
+CellFlag
+--
+unspecified = 0
+min = 1
+max = 2
+rowMin = 4
+rowMax = 8
+bottomGroup = 16
+topGroup = 32
+group=4</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1584</x>
+      <y>642</y>
+      <w>258</w>
+      <h>204</h>
+    </coordinates>
+    <panel_attributes>Measures
+--
+-_svg: SVGElement
+-_minRadius: int = 25
++font: Font
++padding: int = 10
++margin: {left: int, right: int, top: int, bottom: int}
++width: int
++height: int
++sliderHeight: int = 20
++columnHeight: float
++rowWidth: float
++bubbleRadius: float
++bubbleDiameter: float
+--
++Measures(svg: SVGElement)
++initialize(chartData: ChartData, showSlider: bool)
++getBBox(str: String, angle: float, font: Font): BBox
++calculateStringWidth(str: String, angle: float, font: Font): float
++trim(s: String): String
+-_calculateLabels(chartData: ChartData)
+-_calculateBubbleRadius(chartData: ChartData, showSlider: bool)
+
+group=5</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1908</x>
+      <y>684</y>
+      <w>240</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>Font
+--
++Font(family: String, size: String, style: String, weight: String)
++{chainable} family(family: String): Font | String
++{chainable} size(size: String): Font | String
++{chainable} style(style: String): Font | String
++{chainable} weight(weight: String): Font | String
++applyTo(elem: Object)
++clone(): Font
+
+group=5</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1320</x>
+      <y>648</y>
+      <w>144</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>Scales
+--
++x: Function(i: int): float
++y: Function(i: int): float
++r: Function(v: float): float
++{readonly} maxX: float
++{readonly} maxY: float
+--
++Scales()
++initialize(chart: BubbleMatrix)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1092</x>
+      <y>648</y>
+      <w>156</w>
+      <h>198</h>
+    </coordinates>
+    <panel_attributes>Partitions
+--
+-_chart: BubbleMatrix
++chartArea: HTMLDivElement
++mainBlock: HTMLDivElement
++slider: HTMLDivElement
++columnBlock: HTMLDivElement
++placeHolder: HTMLDivElement
++columns: HTMLDivElement
++matrixBlock: HTMLDivElement
++rows: HTMLDivElement
++matrix: HTMLDivElement
+--
++Partitions(chart: BubbleMatrix)
++initialize()
++adjustScrollableBlocks()
++changeFont(font: Font)
+-_adjustSize()
+-_createDiv(): HTMLDivElement
+-_initStyles()
+-_initLayout()
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>816</x>
+      <y>414</y>
+      <w>174</w>
+      <h>270</h>
+    </coordinates>
+    <panel_attributes>Slider
+--
+-_chart: BubbleMatrix
+-_caption: String
+-_g: SVGGElement
+-_label: SVGTextElement
+-_above: SVGGElement
+-_below: SVGGElement
+-_width: float
+-_min: float
+-_max: float
+-_defaultValue: float
++level: float
++{readonly} defaultLevel: float
++{readonly} isPercent: bool
++{readonly} height: int
++{readonly} rowRenderer: RowRenderer
+--
++Slider(chart: BubbleMatrix, caption: String)
++render()
+-_initialize()
+-_renderLabel()
+-_renderColorRects()
+-_renderSlider()
+-_change()
+-_getSafeBound(): {a: int, b: int}
+-_roundUp(n: float, precision: int): int
+-_roundDown(n: float, precision: int): int
+-_updateLevel(value: float)	
+
+group=8</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>726</x>
+      <y>174</y>
+      <w>264</w>
+      <h>150</h>
+    </coordinates>
+    <panel_attributes>Renderer
+--
+-_uuid: String
++chart: BubbleMatrix
++colors: {row, above, below, label: String}
++matrix: {svg: SVGElement, g, og, ig: SVGGElement}
++columns: ColumnRenderer
++rows: RowRenderer	
+--
++Renderer(chart: BubbleMatrix)
++render()
++uid(id: String): String
+-_createSvg(container: any, width: float, height: float): SVGElement
+-_transform(x: float, y: float): String
+-_initMatrix()
+-_renderGradients()
+
+group=8</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>78</x>
+      <y>414</y>
+      <w>246</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>PartRenderer
+--
+-_mainRenderer: Renderer
++duration: int = 500
++{readonly} chart: BubbleMatrix
++{readonly} matrix: {svg: SVGElement, g, og, ig: SVGGElement}
++{readonly} colors: {row, above, below, label: String}
++{readonly} rows: RowRenderer
++{readonly} columns: ColumnRenderer
+--
++PartRenderer(mainRenderer: Renderer)
++uid(id: String): String
++url(id: String): String
+
+group=8</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>48</x>
+      <y>180</y>
+      <w>336</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>ColumnRenderer
+--
+-_arrow: SVGPathElement
++text: SVGTextElement
++labels: SVGGElement[0..*]
++axis: SVGGElement[0..*]
+--
++ColumnRenderer(mainRenderer: Renderer)
++render()
+-_renderGroups(g: SVGGElement, transform: String, textAnchor: String, draw: Function)
+-_trim(d: Column)
+-_click(e: PointerEvent, d: Column)
+-_sort(d: Column)
+
+group=8</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>498</x>
+      <y>414</y>
+      <w>282</w>
+      <h>312</h>
+    </coordinates>
+    <panel_attributes>RowRenderer
+--
+-_toolip: InfoBox
+-_annotation: Annotation
+-_labelRects: SVGRectElement[0..*]
+-_bubbleRects: SVGRectElement[0..*]		
+-_focused: Cell
++{readonly} bubbles: SVGCircleElement[0..*]
++labels: SVGGElement[0..*]
++axis: SVGGElement[0..*]
++highlight: Highlight
++showTooltip: bool
++showAnnotation: bool
+-..
++onHover(e: PointerEvent, d: Column)
++onCancel(e: PointerEvent, d: Column)
+--
++RowRenderer(mainRenderer: Renderer)
++render()
++relocateAnnocation(delay: bool)
++highlightBubbles(update: bool)
+-_renderGroups(g: SVGGElement, draw: Function)
+-_renderRect(g: SVGGElement, x: float, width: float): SVGRectElement
+-_click(e: PointerEvent, d: Column)
+-_sort(d: Column)
+-_initInfoLayer()
+-_showAnnotation(e: PointerEvent, d: Cell)
+-_getTooltipContent(d: Cell)
+-_calcTooltipPosition(c: SVGPoint, box: BBox)
+-_formatValue(v: float): String
+-_handleClick(e: PointerEvent, d: Column)
+-_handlePointerEnter(e: PointerEvent, d: Column)
+-_handlePointerMove(e: PointerEvent)
+-_handlePointerLeave(e: PointerEvent, d: Column)
+
+
+group=8</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>360</x>
+      <y>606</y>
+      <w>90</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enum&gt;&gt;
+Highlight
+--
+matrix = 0
+byRow = 1
+top = 2
+bottom = 3
+group=8</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>492</x>
+      <y>858</y>
+      <w>300</w>
+      <h>192</h>
+    </coordinates>
+    <panel_attributes>InfoBox
+--
+-_svg: SVGElement
+-_font: font
+-_charBox: BBox	
++left: float
++top: float
++{readonly} box: SVGGElemnent
++{readony} offset: int = 10
+-..
++getBBox(s: String): BBox
++calcTextWidth(s: String): float
++calcPosition(c: SVGPoint, b: BBox): {left: float, top: float}
+--
++Tooltip(svg: SVGElement, font: Font, fill: String, opacity: float, stroke: String)
++{virtual} show(e: PointerEvent, content: String[], x: float, y: float)
++{virtual} move(e: PointerEvent, x: float, y: float)
++hide()
+-_initBox(fill: String, opacity: float: stroke: String)
+-_calcWidth(strs: String[])
+-_convertCoordinate(e: PointerEvent, g: SVGGElement)
+
+group=8</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>300</x>
+      <y>900</y>
+      <w>120</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>Annotation
+--
+-_pointer: SVGPathElement
+-_removePointer()
+group=8</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1710</x>
+      <y>396</y>
+      <w>66</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+-_fieldNames
+group=4</panel_attributes>
+    <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1836</x>
+      <y>240</y>
+      <w>90</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
++columns
+group=4</panel_attributes>
+    <additional_attributes>10.0;20.0;130.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1836</x>
+      <y>282</y>
+      <w>90</w>
+      <h>78</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
++rows
+group=4</panel_attributes>
+    <additional_attributes>10.0;10.0;70.0;10.0;70.0;110.0;130.0;110.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1968</x>
+      <y>378</y>
+      <w>36</w>
+      <h>78</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
++cells
+group=4</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;110.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2010</x>
+      <y>240</y>
+      <w>114</w>
+      <h>54</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+group=4</panel_attributes>
+    <additional_attributes>170.0;70.0;110.0;70.0;110.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2040</x>
+      <y>294</y>
+      <w>84</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+group=4</panel_attributes>
+    <additional_attributes>120.0;10.0;60.0;10.0;60.0;80.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2058</x>
+      <y>468</y>
+      <w>66</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+group=4</panel_attributes>
+    <additional_attributes>90.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1458</x>
+      <y>264</y>
+      <w>132</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
++chartData</panel_attributes>
+    <additional_attributes>200.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>1566</x>
+      <y>180</y>
+      <w>666</w>
+      <h>360</h>
+    </coordinates>
+    <panel_attributes>chartdata.js
+--
+fg=#4e79a7
+group=4</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1836</x>
+      <y>708</y>
+      <w>84</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
++font
+group=5</panel_attributes>
+    <additional_attributes>120.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>1566</x>
+      <y>606</y>
+      <w>618</w>
+      <h>264</h>
+    </coordinates>
+    <panel_attributes>measures.js
+--
+fg=#4e79a7
+group=5</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1458</x>
+      <y>336</y>
+      <w>138</w>
+      <h>426</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
++measures</panel_attributes>
+    <additional_attributes>210.0;690.0;100.0;690.0;100.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1386</x>
+      <y>414</y>
+      <w>54</w>
+      <h>66</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+-_options</panel_attributes>
+    <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1266</x>
+      <y>414</y>
+      <w>66</w>
+      <h>288</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+-_scales</panel_attributes>
+    <additional_attributes>90.0;460.0;10.0;460.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1164</x>
+      <y>414</y>
+      <w>54</w>
+      <h>246</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
++partitions</panel_attributes>
+    <additional_attributes>10.0;390.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>984</x>
+      <y>306</y>
+      <w>144</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;380.0;110.0;380.0;110.0;10.0;220.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>378</x>
+      <y>216</y>
+      <w>360</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
++columns
+group=8</panel_attributes>
+    <additional_attributes>10.0;20.0;580.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>630</x>
+      <y>318</y>
+      <w>240</w>
+      <h>108</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
++rows
+group=8</panel_attributes>
+    <additional_attributes>10.0;160.0;10.0;70.0;380.0;70.0;380.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>318</x>
+      <y>462</y>
+      <w>192</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+group=8</panel_attributes>
+    <additional_attributes>10.0;10.0;300.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>198</x>
+      <y>294</y>
+      <w>18</w>
+      <h>132</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+group=8</panel_attributes>
+    <additional_attributes>10.0;200.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>444</x>
+      <y>642</y>
+      <w>66</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+group=8</panel_attributes>
+    <additional_attributes>10.0;10.0;90.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>414</x>
+      <y>918</y>
+      <w>90</w>
+      <h>18</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+group=8</panel_attributes>
+    <additional_attributes>130.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>666</x>
+      <y>720</y>
+      <w>48</w>
+      <h>150</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+-_tooltip
+group=8</panel_attributes>
+    <additional_attributes>10.0;230.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>354</x>
+      <y>720</y>
+      <w>246</w>
+      <h>192</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+-_annotation
+group=8</panel_attributes>
+    <additional_attributes>10.0;300.0;10.0;130.0;390.0;130.0;390.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>348</x>
+      <y>378</y>
+      <w>450</w>
+      <h>372</h>
+    </coordinates>
+    <panel_attributes>rowrenderer.js
+--
+fg=#4e79a7
+group=8</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>276</x>
+      <y>822</y>
+      <w>552</w>
+      <h>258</h>
+    </coordinates>
+    <panel_attributes>infobox.js
+--
+fg=#4e79a7
+group=8</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>0</x>
+      <y>114</y>
+      <w>1020</w>
+      <h>996</h>
+    </coordinates>
+    <panel_attributes>renderers
+--
+lt=.
+fg=#aaaaaa
+group=8</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

@@ -45,7 +45,7 @@ class ChartData {
             const srcRow = rows.get(key);
             const cells = this.columns.map(col => {
                 const c = srcRow.find(d => d[names.column] === col.name);
-                return new Cell(key, col.name, c ? c[names.value] : null);
+                return new Cell(key, col.name, c ? +c[names.value] : null);
             });
             const row = new Row(key, i, cells);
             row.markBounds();

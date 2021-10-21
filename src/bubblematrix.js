@@ -10,7 +10,7 @@ import { Highlight } from "./renderers/rowrenderer.js";
 import Slider from "./slider.js";
 
 export default class BubbleMatrix {
-    constructor(container) {
+    constructor(container = document.createElement("DIV")) {
         this._container = container;
 
         this._options = new BubbleMatrixOptions()
@@ -115,6 +115,9 @@ export default class BubbleMatrix {
     render() {
         const options = this._options;
 
+        const detached = !this._container.isConnected;
+        if (detached) document.body.append(this._container);
+
         this.chartData = new ChartData(this._dataset, this._fieldNames);
         this.chartData.numberIsPercentage = options.numberIsPercentage;
         this.chartData.preserveColumnOrder = options.preserveColumnOrder;
@@ -139,6 +142,12 @@ export default class BubbleMatrix {
         }
 
         this.partitions.adjustScrollableBlocks();
+
+        if (detached) {
+            this._container.remove();
+            return this._container;
+        }
+
         return this;
     }
 
